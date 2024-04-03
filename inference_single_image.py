@@ -19,6 +19,8 @@ from torchvision import transforms
 import networks
 from layers import disp_to_depth
 
+def tuple_type(strings):
+    return tuple(map(int, strings.split(',')))
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Inference on one Single Image.')
@@ -32,6 +34,10 @@ def parse_args():
     parser.add_argument("--no_cuda",
                         help='if set, disables CUDA',
                         action='store_true')
+    parser.add_argument("--gaze",
+                        type=tuple_type,
+                        help='image pixel coordinates to get depth from',
+                        required=True)
 
     return parser.parse_args()
 
@@ -71,10 +77,6 @@ def inference(args):
         input_image = pil.open(image_path).convert('RGB')
         extension = image_path.split('.')[-1]
         original_width, original_height = input_image.size
-
-        input_image = input_image.crop((16, 16, 640-16, 480-16))
-        name_crop = image_path.replace('.'+extension, '_crop.png')
-        input_image.save(name_crop)
 
         crop_width, crop_height = input_image.size
 
@@ -128,6 +130,10 @@ def inference(args):
         name_dest_im = image_path.replace('.'+extension, '_depth.png')
         print("-> Saving depth png to ", name_dest_im)
         im.save(name_dest_im)
+
+        # get depth at gaze point
+        depth_gaze = disp_resized_np[args.gaze[1], args.gaze[0]]
+        print('-> Depth at gaze point: ', depth_gaze)   
 
     print('-> Done!')
 
