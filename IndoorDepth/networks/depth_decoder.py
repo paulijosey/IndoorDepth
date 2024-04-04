@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from collections import OrderedDict
-from layers import *
+from IndoorDepth.layers import *
 
 
 class DepthDecoder(nn.Module):
