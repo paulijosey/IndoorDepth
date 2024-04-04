@@ -1,3 +1,4 @@
 data/*
 IndoorDepth/models/*
-*__pycache__/*
+IndoorDepth/__pycache__/*
+IndoorDepth/networks/__pycache__/*
